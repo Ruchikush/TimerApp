@@ -1,30 +1,31 @@
-import React, {useState} from 'react';
-import {View, Text, Button, FlatList, StyleSheet, Alert} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, FlatList, StyleSheet, Alert, Dimensions } from 'react-native';
 import Timer from '../components/Timer';
+
+const { width, height } = Dimensions.get('window');
+const isSmallDevice = width < 360; // Adjust styling for smaller devices
 
 const TimerScreen = () => {
   const [timers, setTimers] = useState([]);
-  const [timerCount, setTimerCount] = useState(1); // Keeps track of the timer count for naming
+  const [timerCount, setTimerCount] = useState(1);
 
   const addTimer = () => {
     if (timers.length >= 5) {
-      // Show an alert if there are already 5 timers
       Alert.alert('Limit Reached', 'You cannot add more than 5 timers.', [
-        {text: 'OK', onPress: () => console.log('Alert closed')},
+        { text: 'OK', onPress: () => console.log('Alert closed') },
       ]);
-      return; // Prevent adding more timers
+      return;
     }
 
-    // Add a new timer if the limit is not reached
     const newTimer = {
       id: Date.now().toString(),
-      name: `Timer ${timerCount}`, // Assign a name based on the count
+      name: `Timer ${timerCount}`,
     };
     setTimers([...timers, newTimer]);
-    setTimerCount(timerCount + 1); // Increment for the next timer name
+    setTimerCount(timerCount + 1);
   };
 
-  const removeTimer = id => {
+  const removeTimer = (id) => {
     setTimers(timers.filter(timer => timer.id !== id));
   };
 
@@ -39,7 +40,7 @@ const TimerScreen = () => {
       <FlatList
         data={timers}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <Timer id={item.id} name={item.name} onRemove={removeTimer} />
         )}
       />
@@ -50,12 +51,12 @@ const TimerScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: width * 0.05, // Responsive padding based on screen width
   },
   title: {
-    fontSize: 24,
+    fontSize: isSmallDevice ? 20 : 24, // Adjust font size for small devices
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: height * 0.02, // Responsive vertical margin
   },
 });
 

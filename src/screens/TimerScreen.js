@@ -26,7 +26,13 @@ const TimerScreen = () => {
   };
 
   const removeTimer = (id) => {
-    setTimers(timers.filter(timer => timer.id !== id));
+    const updatedTimers = timers.filter(timer => timer.id !== id);
+    setTimers(updatedTimers);
+
+    // Reset timer count if all timers are removed
+    if (updatedTimers.length === 0) {
+      setTimerCount(1);
+    }
   };
 
   return (
